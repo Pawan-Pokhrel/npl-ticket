@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp" %>
-<%@ include file="user-sidebar.jsp" %>
+<%@ include file="user-navbar.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +11,7 @@
     body { margin:0; padding:0; font-family:'Poppins',sans-serif; background:#f4f6fa; }
     .main-content { margin-left:240px; padding:30px 40px; min-height:calc(100vh - 60px - 60px); background: linear-gradient(to right, #eae6f9, #f5f7fa); }
     .main-content h1 { color:#5a2ebc; font-size:32px; margin-bottom:24px; }
-    .events-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:30px; }
+    .events-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:30px; margin-bottom: 40px; }
     .event-card {
       background:#fff; border-radius:14px; overflow:hidden;
       box-shadow:0 6px 16px rgba(0,0,0,0.08);

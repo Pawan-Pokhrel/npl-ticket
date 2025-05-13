@@ -1,0 +1,131 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<div class="user-sidebar">
+    <div class="user-profile">
+        <i class="fas fa-user-circle profile-icon"></i>
+        <p class="username">${sessionScope.username}</p>
+        <h2>
+            <img src="${pageContext.request.contextPath}/images/NPL-text.png" alt="NPL Logo">
+            <span>Admin</span>
+        </h2>
+    </div>
+
+    <div class="nav-section">
+        <p class="section-title">MAIN</p>
+        <a href="${pageContext.request.contextPath}/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="${pageContext.request.contextPath}/admin/manage-tickets"><i class="fas fa-ticket-alt"></i> Manage Tickets</a>
+        <a href="${pageContext.request.contextPath}/admin/ticket-types"><i class="fas fa-calendar-alt"></i> Ticket Types</a>
+        <a href="${pageContext.request.contextPath}/admin/manage-matches"><i class="fas fa-info-circle"></i> Manage Matches </a>
+    </div>
+
+    <div class="nav-section">
+        <p class="section-title">ACCOUNT</p>
+        <a href="${pageContext.request.contextPath}/profile"><i class="fas fa-user-cog"></i> Profile Settings</a>
+    </div>
+
+    <a href="${pageContext.request.contextPath}/logout" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+</div>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .user-sidebar {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        height: calc(100vh - 70px);
+        width: 250px;
+        background: linear-gradient(180deg, #6e4b8c, #bfa2d1);
+        border-right: 1px solid #e0e0e0;
+        padding: 20px 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-profile {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .user-profile h2 {
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .user-profile h2 img {
+        width: 60px;
+    }
+
+    .profile-icon {
+        font-size: 60px;
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .username {
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .nav-section {
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        font-size: 12px;
+        color: #e6e6e6;
+        margin-bottom: 10px;
+        padding-left: 5px;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    .nav-section a {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 15px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #fff;
+        font-size: 15px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .nav-section a:hover {
+        background-color: #9b7ce6; /* Lavender Accent */
+        transform: scale(1.05); 
+    }
+
+    .logout-btn {
+        margin-top: auto;
+        background-color: #e74c3c;
+        color: #fff;
+        text-align: center;
+        padding: 12px 0;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: #c0392b;
+    }
+
+    .nav-section i,
+    .logout-btn i {
+        font-size: 16px;
+    }
+</style>

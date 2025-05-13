@@ -87,7 +87,7 @@ public class UserModel {
 		return image;
 	}
 	
-	public void setImage(String address) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 	

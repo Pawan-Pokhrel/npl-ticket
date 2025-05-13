@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp" %>
-<%@ include file="user-sidebar.jsp" %>
+<%@ include file="user-navbar.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +13,7 @@
         .main-content h1 { color: #5a2ebc; font-size: 32px; margin-bottom: 24px; }
 
         /* Two cards per row */
-        .matches-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        .matches-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-bottom: 40px; }
 
         .match-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; display: flex; flex-direction: column; }
         .match-card:hover { transform: translateY(-8px); box-shadow: 0 16px 32px rgba(126,63,242,0.2); }

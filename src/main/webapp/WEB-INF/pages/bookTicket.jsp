@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp" %>
-<%@ include file="user-sidebar.jsp" %>
+<%@ include file="user-navbar.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,17 +16,19 @@
         .booking-header p { color: #555; font-size: 17px; }
 
         /* Force exactly 4 cards per row and slightly larger cards */
-        .teams-grid { display: grid; grid-template-columns: repeat(4, minmax(240px, 1fr)); gap: 30px; margin-bottom: 40px; }
-        .team-card { background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; transition: transform 0.3s; }
-        .team-card:hover { transform: translateY(-6px); }
-        .team-card img {
-            width: 100%;
-            /* maintain 5:4 aspect ratio */
+        .matches-grid { display: grid; grid-template-columns: repeat(4, minmax(240px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        .match-card { background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; transition: transform 0.3s; }
+        .match-card:hover { transform: translateY(-6px); }
+        .match-card .team-logos { display: flex; justify-content: space-between; }
+        .match-card img {
+            width: 48%;
             height: auto;
             aspect-ratio: 5 / 4;
             object-fit: cover;
         }
-        .team-card h3 { margin: 20px; font-size: 20px; color: #333; }
+        .match-card .match-info { margin: 20px; }
+        .match-card h3 { font-size: 18px; color: #333; margin-bottom: 10px; }
+        .match-card p { font-size: 14px; color: #555; margin: 5px 0; }
 
         .ticket-form { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
         .ticket-form label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
@@ -36,6 +39,10 @@
         .info-section { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 40px; }
         .info-section h2 { color: #5a2ebc; margin-bottom: 15px; }
         .info-section p { color: #555; font-size: 14px; line-height: 1.6; }
+
+        .message-box { text-align: center; margin-bottom: 20px; padding: 10px; border-radius: 5px; }
+        .message-box.success { background: #d4edda; color: #155724; }
+        .message-box.error { background: #f8d7da; color: #721c24; }
     </style>
 </head>
 <body>
@@ -43,58 +50,42 @@
 <div class="main-content">
     <div class="booking-header">
         <h1>Book Your NPL Match Tickets</h1>
-        <p>Select your favorite team, choose ticket quantity, and enjoy the game!</p>
+        <p>Select a match, choose ticket quantity, and enjoy the game!</p>
     </div>
 
-    <!-- Teams Selection Grid -->
-    <div class="teams-grid">
-        <div class="team-card" onclick="selectTeam('Biratnagar Kings')">
-            <img src="images/teams/biratnagar-kings.jpg" alt="Biratnagar Kings">
-            <h3>Biratnagar Kings</h3>
+    <!-- Display Messages -->
+    <c:if test="${not empty message}">
+        <div class="message-box ${messageType}">
+            <p>${message}</p>
         </div>
-        <div class="team-card" onclick="selectTeam('Chitwan Rhinos')">
-            <img src="images/teams/chitwan-rhinos.jpg" alt="Chitwan Rhinos">
-            <h3>Chitwan Rhinos</h3>
-        </div>
-        <div class="team-card" onclick="selectTeam('Janakpur Bolts')">
-            <img src="images/teams/janakpur-bolts.jpg" alt="Janakpur Bolts">
-            <h3>Janakpur Bolts</h3>
-        </div>
-        <div class="team-card" onclick="selectTeam('Karnali Yaks')">
-            <img src="images/teams/karnali-yaks.jpg" alt="Karnali Yaks">
-            <h3>Karnali Yaks</h3>
-        </div>
-        <div class="team-card" onclick="selectTeam('Kathmandu Gurkhas')">
-            <img src="images/teams/kathmandu-gurkhas.jpg" alt="Kathmandu Gurkhas">
-            <h3>Kathmandu Gurkhas</h3>
-        </div>
-        <div class="team-card" onclick="selectTeam('Lumbini Lions')">
-            <img src="images/teams/lumbini-lions.jpg" alt="Lumbini Lions">
-            <h3>Lumbini Lions</h3>
-        </div>
-        <div class="team-card" onclick="selectTeam('Pokhara Avengers')">
-            <img src="images/teams/pokhara-avengers.jpg" alt="Pokhara Avengers">
-            <h3>Pokhara Avengers</h3>
-        </div>
-        <div class="team-card" onclick="selectTeam('Sudurpaschim Royals')">
-            <img src="images/teams/sudurpaschim-royals.jpg" alt="Sudurpaschim Royals">
-            <h3>Sudurpaschim Royals</h3>
-        </div>
+    </c:if>
+
+    <!-- Matches Selection Grid -->
+    <div class="matches-grid">
+        <c:forEach var="match" items="${matches}">
+            <div class="match-card" onclick="selectMatch('${match.matchId}', '${match.team1} vs ${match.team2}')">
+                <div class="team-logos">
+                    <img src="images/teams/${match.team1.toLowerCase().replace(' ', '-')}.jpg" alt="${match.team1}">
+                    <img src="images/teams/${match.team2.toLowerCase().replace(' ', '-')}.jpg" alt="${match.team2}">
+                </div>
+                <div class="match-info">
+                    <h3>${match.team1} vs ${match.team2}</h3>
+                    <p>Date: ${match.date}</p>
+                    <p>Venue: ${match.venue}</p>
+                    <p>Time: ${match.time}</p>
+                </div>
+            </div>
+        </c:forEach>
     </div>
 
     <!-- Booking Form -->
     <form class="ticket-form" action="${pageContext.request.contextPath}/book-tickets" method="post">
-        <label for="teamSelect">Selected Team</label>
-        <select id="teamSelect" name="team" required>
-            <option value="">-- Choose a Team --</option>
-            <option>Biratnagar Kings</option>
-            <option>Chitwan Rhinos</option>
-            <option>Janakpur Bolts</option>
-            <option>Karnali Yaks</option>
-            <option>Kathmandu Gurkhas</option>
-            <option>Lumbini Lions</option>
-            <option>Pokhara Avengers</option>
-            <option>Sudurpaschim Royals</option>
+        <label for="matchSelect">Selected Match</label>
+        <select id="matchSelect" name="matchId" required>
+            <option value="">-- Choose a Match --</option>
+            <c:forEach var="match" items="${matches}">
+                <option value="${match.matchId}">${match.team1} vs ${match.team2} (${match.date})</option>
+            </c:forEach>
         </select>
 
         <label for="quantity">Number of Tickets</label>
@@ -116,8 +107,8 @@
 </div>
 
 <script>
-    function selectTeam(name) {
-        document.getElementById('teamSelect').value = name;
+    function selectMatch(matchId, matchName) {
+        document.getElementById('matchSelect').value = matchId;
         window.scrollTo({ top: document.querySelector('.ticket-form').offsetTop - 20, behavior: 'smooth' });
     }
 </script>

@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,19 +20,18 @@
         }
 
         .top-header {
-		    height: 70px;
-		    width: 100%;
-		    background: linear-gradient(to right, #ffffff 0%, #f3edf8 40%, #bfa2d1 100%);
-		    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
-		    display: flex;
-		    align-items: center;
-		    justify-content: space-between;
-		    padding: 0 24px;
-		    position: sticky;
-		    top: 0;
-		    z-index: 1000;
-		}
-
+            height: 70px;
+            width: 100%;
+            background: #ffffff;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
         .logo-container {
             display: flex;
@@ -160,14 +158,7 @@
 
     <div class="user-container" id="userToggle">
         <span>Welcome, <strong>${sessionScope.username != null ? sessionScope.username : 'Guest'}</strong></span>
-        <c:choose>
-	        <c:when test="${not empty sessionScope.image}">
-	            <img src="${pageContext.request.contextPath}/${sessionScope.image}" alt="User Image">
-	        </c:when>
-	        <c:otherwise>
-	            <img src="${pageContext.request.contextPath}/images/default-user.png" alt="User Image">
-	        </c:otherwise>
-	    </c:choose>
+        <img src="${pageContext.request.contextPath}/images/default-user.png" alt="User Profile">
         <i class="fas fa-chevron-down"></i>
 
         <div class="user-dropdown" id="userDropdown">

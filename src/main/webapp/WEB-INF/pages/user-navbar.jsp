@@ -4,7 +4,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Sidebar</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -35,10 +34,29 @@
             margin-bottom: 20px;
         }
 
-        .user-info i {
-            font-size: 50px;
+        .user-info .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            overflow: hidden;
+            border: 2px solid #3366ff;
+        }
+
+        .user-info .avatar i {
+            font-size: 40px;
             color: #333;
-            margin-bottom: 10px;
+        }
+
+        .user-info .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
 
         .user-info h3 {
@@ -51,7 +69,7 @@
             padding: 0 20px;
         }
 
-        .section-title {
+        .section-title-nav {
             font-size: 12px;
             text-transform: uppercase;
             color: #999;
@@ -101,7 +119,6 @@
         .logout-btn:hover {
             background-color: #d9363e;
         }
-
     </style>
 </head>
 <body>
@@ -109,7 +126,16 @@
 <div class="sidebar">
     <div>
         <div class="user-info">
-            <i class="fas fa-user"></i>
+            <div class="avatar">
+			    <c:choose>
+			        <c:when test="${not empty sessionScope.image}">
+			            <img src="${pageContext.request.contextPath}/${sessionScope.image}" alt="User Image">
+			        </c:when>
+			        <c:otherwise>
+			            <i class="fas fa-user"></i>
+			        </c:otherwise>
+			    </c:choose>
+			</div>
             <h3>
                 <c:choose>
                     <c:when test="${not empty sessionScope.username}">
@@ -123,7 +149,7 @@
         </div>
 
         <div class="section">
-            <div class="section-title">Main</div>
+            <div class="section-title-nav">Main</div>
             <a href="${pageContext.request.contextPath}/" class="nav-link"><i class="fas fa-house"></i> Home</a>
             <a href="${pageContext.request.contextPath}/mybookings" class="nav-link"><i class="fas fa-ticket-alt"></i> My Bookings</a>
             <a href="${pageContext.request.contextPath}/events" class="nav-link"><i class="fas fa-calendar-day"></i> Match Events</a>
@@ -131,7 +157,7 @@
         </div>
 
         <div class="section">
-            <div class="section-title">Account</div>
+            <div class="section-title-nav">Account</div>
             <a href="${pageContext.request.contextPath}/profile" class="nav-link"><i class="fas fa-user-cog"></i> Profile Settings</a>
         </div>
     </div>
@@ -150,3 +176,4 @@
 
 </body>
 </html>
+

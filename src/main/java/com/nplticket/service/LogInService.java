@@ -22,7 +22,7 @@ public class LogInService {
     public LogInService() {
         try {
             dbConn = DbConfig.getDbConnection();
-        } catch (SQLException | ClassNotFoundException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
             isConnectionError = true;
         }
@@ -75,6 +75,8 @@ public class LogInService {
         user.setVerified(result.getBoolean("isVerified"));
         user.setCreatedAt(result.getTimestamp("createdAt").toLocalDateTime());
         user.setUpdatedAt(result.getTimestamp("updatedAt").toLocalDateTime());
+
+        System.out.println(user.getImage());
         return user;
     }
 }

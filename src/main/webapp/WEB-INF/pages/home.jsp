@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp" %>
-<%@ include file="user-sidebar.jsp" %>
+<%@ include file="user-navbar.jsp" %>
 <%@ include file="footer.jsp" %>
 <!DOCTYPE html>
 <html lang="en">

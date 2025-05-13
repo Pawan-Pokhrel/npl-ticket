@@ -1,4 +1,4 @@
-package com.nplticket.controller;
+package com.nplticket.controller.admin;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -8,16 +8,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Servlet implementation class MyBookingsController
+ * Servlet implementation class ManageTicketController
  */
-@WebServlet(asyncSupported = true, urlPatterns = { "/mybookings" })
-public class MyBookingsController extends HttpServlet {
+@WebServlet(asyncSupported = true, urlPatterns = { "/admin/manage-tickets" })
+public class ManageTicketController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MyBookingsController() {
+    public ManageTicketController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -27,7 +27,7 @@ public class MyBookingsController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.getRequestDispatcher("WEB-INF/pages/myBookings.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/pages/admin/manage-ticket.jsp").forward(request, response);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp" %>
-<%@ include file="user-sidebar.jsp" %>
+<%@ include file="user-navbar.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +10,7 @@
   <style>
     body { margin:0; padding:0; font-family:'Poppins',sans-serif; background:#f5f7fa; }
     .main-content { margin-left:240px; padding:40px; min-height:calc(100vh - 60px - 60px); box-sizing:border-box; background: linear-gradient(to right, #eae6f9, #f5f7fa); }
-    .main-content h1 { color:#5a2ebc; font-size:32px; margin-bottom:20px; }
+    .main-content h1 { color:#5a2ebc; font-size:32px; margin-bottom:40px; }
 
     .about-container { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; margin-bottom:60px; }
     .about-text { background:white; padding:30px; border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,0.05); }
@@ -23,6 +23,7 @@
     .stat-card h3 { font-size:28px; color:#7e3ff2; margin-bottom:8px; }
     .stat-card p { color:#555; font-size:14px; }
 
+	.team-section {margin-bottom: 40px;}
     .team-section h2 { color:#5a2ebc; font-size:28px; margin-bottom:24px; text-align:center; }
     /* Force exactly 4 cards per row */
     .team-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:30px; justify-items:center; }

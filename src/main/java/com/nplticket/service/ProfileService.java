@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 
 public class ProfileService {
 
-    // Fetch user profile based on user ID
     public UserModel getUserProfile(String username) throws SQLException, ClassNotFoundException {
         String query = "SELECT * FROM user WHERE SUBSTRING_INDEX(email, '@', 1) = ?";
         try (Connection conn = DbConfig.getDbConnection();
@@ -30,16 +29,16 @@ public class ProfileService {
                 user.setImage(rs.getString("image"));
                 user.setRole(rs.getString("role"));
                 user.setCreatedAt(rs.getTimestamp("createdAt") != null ? rs.getTimestamp("createdAt").toLocalDateTime() : null);
-                System.out.println(rs.getString("address"));
+                System.out.println("User Address: " + rs.getString("address"));
                 return user;
             } else {
-                return null; // User not found
+                return null;
             }
         }
     }
 
     public boolean updateUserProfile(UserModel user) throws SQLException, ClassNotFoundException {
-        String query = "UPDATE user SET fullName = ?, email = ?, phoneNumber = ?, address = ?, image = ?, updatedAt = ? WHERE id = ?;";
+        String query = "UPDATE user SET fullName = ?, email = ?, phoneNumber = ?, address = ?, image = ?, updatedAt = ? WHERE id = ?";
         try (Connection conn = DbConfig.getDbConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             System.out.println("Updating user with ID: " + user.getId());
@@ -57,17 +56,16 @@ public class ProfileService {
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
             throw e;
-        }          
+        }
     }
 
-    // Check if email already exists (for profile editing validation)
     public boolean emailExists(String email, String userId) throws SQLException, ClassNotFoundException {
         String query = "SELECT id FROM user WHERE email = ?";
         try (Connection conn = DbConfig.getDbConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
-            return rs.next(); // true if email already exists for another user
+            return rs.next();
         }
     }
 }

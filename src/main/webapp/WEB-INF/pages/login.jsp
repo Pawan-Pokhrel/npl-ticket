@@ -28,6 +28,25 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 1;
         }
+        .notification {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            z-index: 3;
+        }
+        .notification.success {
+            background: #28a745;
+        }
+        .notification.error {
+            background: #dc3545;
+        }
         .container {
             position: relative;
             z-index: 2;
@@ -44,7 +63,6 @@
             align-items: center;
             justify-content: center;
             place-content: space-between;
-           
         }
         .container h2 {
             margin-bottom: 30px;
@@ -53,16 +71,16 @@
             font-weight: 700;
             text-align: center;
         }
-        .header-text{
-        	display: flex;
-        	align-items: center;
-        	margin-top: 25px;
+        .header-text {
+            display: flex;
+            align-items: center;
+            margin-top: 25px;
         }
         .container h2 img {
-        	width: 90px;
+            width: 90px;
         }
-        form{
-        	width: 90%;
+        form {
+            width: 90%;
         }
         .form-group {
             width: 100%;
@@ -79,11 +97,18 @@
             transition: 0.2s ease-in-out;
         }
         .form-group input:focus {
-        	border: 1px solid #7e3ff2;
+            border: 1px solid #7e3ff2;
+            box-shadow: 0 0px 10px #7e3ff2;
+        }
+        .form-group .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
         }
         .back-to-home {
-        	display: block;
-        	text-align: center;
+            display: block;
+            text-align: center;
         }
         .options {
             width: 100%;
@@ -125,7 +150,6 @@
             text-decoration: none;
             font-weight: 600;
         }
-
         /* Responsive */
         @media (max-width: 480px) {
             .container {
@@ -136,14 +160,25 @@
     </style>
 </head>
 <body>
+<% if (request.getAttribute("message") != null) { %>
+    <div class="notification <%= request.getAttribute("messageType") %>">
+        <%= request.getAttribute("message") %>
+    </div>
+<% } %>
 <div class="container">
     <h2>LOGIN TO <br> <span class="header-text"><img src="${pageContext.request.contextPath}/images/NPL-text.png"> Ticket Reservation System</span> </h2>
     <form action="login" method="post">
         <div class="form-group">
-            <input type="email" name="email" placeholder="Email Address" required>
+            <input type="email" name="email" placeholder="Email Address" required value="<%= request.getParameter("email") != null ? request.getParameter("email") : "" %>">
+            <% if (request.getAttribute("emailError") != null) { %>
+                <span class="error-message"><%= request.getAttribute("emailError") %></span>
+            <% } %>
         </div>
         <div class="form-group">
             <input type="password" name="password" placeholder="Enter Password" required minlength="6">
+            <% if (request.getAttribute("passwordError") != null) { %>
+                <span class="error-message"><%= request.getAttribute("passwordError") %></span>
+            <% } %>
         </div>
         <div class="options">
             <label><input type="checkbox" name="rememberMe"> Remember me</label>
@@ -153,7 +188,7 @@
     </form>
     <div class="signup-text">
         Don't have an account? <a href="${pageContext.request.contextPath}/register">Register now</a><br><br>
-    	<span class="back-to-home">Return to Homepage? <a href="${pageContext.request.contextPath}/">Go back</a></span>
+        <span class="back-to-home">Return to Homepage? <a href="${pageContext.request.contextPath}/">Go back</a></span>
     </div>
 </div>
 </body>

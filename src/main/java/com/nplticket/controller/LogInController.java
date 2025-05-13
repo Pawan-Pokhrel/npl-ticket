@@ -40,36 +40,50 @@ public class LogInController extends HttpServlet {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
 
-            // Validate input
-            if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            // Check for empty fields and set specific error messages
+            boolean hasFieldErrors = false;
+            if (email == null || email.trim().isEmpty()) {
+                request.setAttribute("emailError", "Email is required.");
+                hasFieldErrors = true;
+            }
+            if (password == null || password.trim().isEmpty()) {
+                request.setAttribute("passwordError", "Password is required.");
+                hasFieldErrors = true;
+            }
+
+            if (hasFieldErrors) {
                 request.setAttribute("message", "Please fill in all required fields.");
+                request.setAttribute("messageType", "error");
                 request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
                 return;
             }
 
-            // Retrieve user by email
             UserModel user = loginService.getUserByEmail(email);
 
             if (user == null || !PasswordUtil.verifyPassword(password, user.getPassword(), email)) {
                 request.setAttribute("message", "Invalid email or password.");
+                request.setAttribute("messageType", "error");
                 request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
                 return;
             }
 
-            // ✅ Store email in session
-            SessionUtil.setAttribute(request, "user", user.getEmail());
+            // Debug: Log the image path
+            System.out.println("User Image Path: " + user.getImage());
+            if (user.getImage() == null) {
+                System.out.println("Warning: User image is null for email: " + email);
+            }
 
-            // ✅ Extract username from email and store it in session
+            SessionUtil.setAttribute(request, "user", user.getEmail());
+            SessionUtil.setAttribute(request, "image", user.getImage());
             String username = user.getEmail().split("@")[0];
             SessionUtil.setAttribute(request, "username", username);
 
-            // ✅ Add role cookie (valid for 1 day = 86400 seconds)
             CookieUtil.addCookie(response, "role", user.getRole(), 86400, true);
 
-            // ✅ Redirect to homepage after successful login
             response.sendRedirect(request.getContextPath() + "/");
         } catch (Exception e) {
             request.setAttribute("message", "Login failed: " + e.getMessage());
+            request.setAttribute("messageType", "error");
             request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
         }
     }

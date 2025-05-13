@@ -17,7 +17,7 @@ public class AuthenticationFilter implements Filter {
     private static final String ROOT = "/";
     private static final String TICKET_PAGE = "/booktickets";
     private static final String ADMIN_PATH = "/admin";
-    private static final String BOOKING_PAGE = "/booking";
+    private static final String BOOKING_PAGE = "/mybookings";
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -48,21 +48,21 @@ public class AuthenticationFilter implements Filter {
         }
 
         // ✅ Handle admin path
-        if (uri.startsWith(contextPath + ADMIN_PATH)) {
-            if (!isLoggedIn) {
-                // Not logged in — redirect to login
-                res.sendRedirect(contextPath + LOGIN);
-                return;
-            } else if (!"admin".equals(userRole)) {
-                // Logged in but not admin — redirect to /booking
-                res.sendRedirect(contextPath + BOOKING_PAGE);
-                return;
-            } else {
-                // Admin user — allow access
-                chain.doFilter(request, response);
-                return;
-            }
-        }
+//        if (uri.startsWith(contextPath + ADMIN_PATH)) {
+//            if (!isLoggedIn) {
+//                // Not logged in — redirect to login
+//                res.sendRedirect(contextPath + LOGIN);
+//                return;
+//            } else if (!"admin".equals(userRole)) {
+//                // Logged in but not admin — redirect to /booking
+//                res.sendRedirect(contextPath + BOOKING_PAGE);
+//                return;
+//            } else {
+//                // Admin user — allow access
+//                chain.doFilter(request, response);
+//                return;
+//            }
+//        }
 
         // ✅ For ticket booking page, require login
         if (uri.contains(TICKET_PAGE)) {
