@@ -150,7 +150,7 @@
 
 <!-- Top Header -->
 <div class="top-header">
-    <div class="logo-container">
+    <div class="logo-container" onclick="window.location.href='${pageContext.request.contextPath}/'">
         <img src="${pageContext.request.contextPath}/images/NPL-text.png" alt="NPL Logo">
         <span>Ticket System</span>
         <i class="fas fa-bars mobile-toggle" id="menuToggle"></i>
@@ -158,7 +158,14 @@
 
     <div class="user-container" id="userToggle">
         <span>Welcome, <strong>${sessionScope.username != null ? sessionScope.username : 'Guest'}</strong></span>
-        <img src="${pageContext.request.contextPath}/images/default-user.png" alt="User Profile">
+        <c:choose>
+            <c:when test="${not empty sessionScope.image}">
+                <img src="${pageContext.request.contextPath}/${sessionScope.image}" alt="User Image" class="profile-image">
+            </c:when>
+            <c:otherwise>
+                <img src="${pageContext.request.contextPath}/images/default-user.png" alt="User Image" class="profile-image">
+            </c:otherwise>
+        </c:choose>
         <i class="fas fa-chevron-down"></i>
 
         <div class="user-dropdown" id="userDropdown">

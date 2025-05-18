@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp" %>
-<%@ include file="user-navbar.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,29 +7,168 @@
   <title>About | NPL Ticket Reservation</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { margin:0; padding:0; font-family:'Poppins',sans-serif; background:#f5f7fa; }
-    .main-content { margin-left:240px; padding:40px; min-height:calc(100vh - 60px - 60px); box-sizing:border-box; background: linear-gradient(to right, #eae6f9, #f5f7fa); }
-    .main-content h1 { color:#5a2ebc; font-size:32px; margin-bottom:40px; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+      position: relative;
+    }
 
-    .about-container { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; margin-bottom:60px; }
-    .about-text { background:white; padding:30px; border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,0.05); }
-    .about-text h2 { color:#333; font-size:24px; margin-bottom:16px; }
-    .about-text p { color:#555; font-size:16px; line-height:1.6; margin-bottom:12px; }
-    .about-image img { width:100%; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    .main-content {
+      padding: 40px;
+      min-height: calc(100vh - 80px - 60px); /* Adjusted for 80px header height and 60px footer height */
+      box-sizing: border-box;
+      background: linear-gradient(to right, #eae6f9, #f5f7fa);
+    }
 
-    .stats { display:flex; gap:30px; margin-bottom:60px; }
-    .stat-card { background:white; flex:1; text-align:center; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
-    .stat-card h3 { font-size:28px; color:#7e3ff2; margin-bottom:8px; }
-    .stat-card p { color:#555; font-size:14px; }
+    .main-content h1 {
+      color: #5a2ebc;
+      font-size: 32px;
+      margin-bottom: 40px;
+    }
 
-	.team-section {margin-bottom: 40px;}
-    .team-section h2 { color:#5a2ebc; font-size:28px; margin-bottom:24px; text-align:center; }
-    /* Force exactly 4 cards per row */
-    .team-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:30px; justify-items:center; }
-    .team-card { background:white; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.05); text-align:center; transition:transform .3s; width:220px; }
-    .team-card:hover { transform:translateY(-6px); }
-    .team-card img { width:100%; height:160px; object-fit:cover; }
-    .team-card h4 { margin:12px 0; font-size:18px; color:#333; }
+    .about-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      margin-bottom: 60px;
+    }
+
+    .about-text {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .about-text h2 {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .about-text p {
+      color: #555;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .about-image img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .stats {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+
+    .stat-card {
+      background: white;
+      flex: 1;
+      text-align: center;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card h3 {
+      font-size: 28px;
+      color: #7e3ff2;
+      margin-bottom: 8px;
+    }
+
+    .stat-card p {
+      color: #555;
+      font-size: 14px;
+    }
+
+    .team-section {
+      margin-bottom: 40px;
+    }
+
+    .team-section h2 {
+      color: #5a2ebc;
+      font-size: 28px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      justify-items: center;
+    }
+
+    .team-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      transition: transform 0.3s;
+      width: 220px;
+    }
+
+    .team-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .team-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .team-card h4 {
+      margin: 12px 0;
+      font-size: 18px;
+      color: #333;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        padding: 20px;
+      }
+
+      .main-content h1 {
+        font-size: 24px;
+        margin-bottom: 30px;
+      }
+
+      .about-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+
+      .stats {
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .team-card {
+        width: 100%;
+      }
+
+      .team-section h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+      }
+    }
   </style>
 </head>
 <body>

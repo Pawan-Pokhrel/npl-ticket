@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp" %>
-<%@ include file="user-navbar.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +8,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body { margin:0; padding:0; font-family:'Poppins',sans-serif; background:#f4f6fa; }
-    .main-content { margin-left:240px; padding:30px 40px; min-height:calc(100vh - 60px - 60px); background: linear-gradient(to right, #eae6f9, #f5f7fa); }
+    .main-content { padding:30px 40px; min-height:calc(100vh - 80px - 60px); background: linear-gradient(to right, #eae6f9, #f5f7fa); }
     .main-content h1 { color:#5a2ebc; font-size:32px; margin-bottom:24px; }
-    .events-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:30px; margin-bottom: 40px; }
+    .events-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:30px; margin-bottom:40px; }
     .event-card {
       background:#fff; border-radius:14px; overflow:hidden;
       box-shadow:0 6px 16px rgba(0,0,0,0.08);
@@ -32,7 +31,7 @@
   <h1>Upcoming Events</h1>
   <div class="events-grid">
     <div class="event-card">
-      <img src="images/events/opening-ceremony.jpg" alt="Opening Ceremony">
+      <img src="${pageContext.request.contextPath}/images/openingceremony.jpg" alt="Opening Ceremony">
       <div class="event-info">
         <h3>Opening Ceremony – NPL 2025</h3>
         <p>Enjoy live performances, fireworks, and special guest appearances to kick off the season.</p>
@@ -41,7 +40,7 @@
     </div>
 
     <div class="event-card">
-      <img src="images/events/fan-meet.jpg" alt="Fan Meet and Greet">
+      <img src="${pageContext.request.contextPath}/images/fanmeetandgreet.jpg" alt="Fan Meet and Greet">
       <div class="event-info">
         <h3>Fan Meet & Greet</h3>
         <p>Get up close with your favorite players, take photos, and win signed merchandise.</p>
@@ -50,7 +49,7 @@
     </div>
 
     <div class="event-card">
-      <img src="images/events/skills-challenge.jpg" alt="Skills Challenge">
+      <img src="${pageContext.request.contextPath}/images/skillsandchallenge.jpg" alt="Skills Challenge">
       <div class="event-info">
         <h3>Skills Challenge</h3>
         <p>Watch top athletes compete in batting, bowling, and fielding challenges for prize money.</p>
@@ -59,7 +58,7 @@
     </div>
 
     <div class="event-card">
-      <img src="images/events/all-stars-match.jpg" alt="All-Stars Charity Match">
+      <img src="${pageContext.request.contextPath}/images/stars.jpg" alt="All-Stars Charity Match">
       <div class="event-info">
         <h3>All-Stars Charity Match</h3>
         <p>Support local charities as NPL all-stars face off in a fun exhibition game.</p>

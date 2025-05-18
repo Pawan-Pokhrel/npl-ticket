@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file="header.jsp" %>
-<%@ include file="user-navbar.jsp" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,8 +18,9 @@
         }
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(to right, #eae6f9, #f5f7fa);
+            background: linear-gradient(to right, #f0f2f5, #e6e9f0);
             color: #333;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
@@ -29,31 +29,31 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
+            padding: 30px;
             overflow-y: auto;
         }
         .dashboard-card {
-            background: linear-gradient(135deg, #e2e0f5, #f0ecfa);
-            padding: 20px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             display: grid;
             grid-template-columns: 1fr 2fr;
-            gap: 40px;
-            width: calc(100vw - 250px);
-            max-width: 100%;
-            height: calc(100vh - 70px);
-            overflow: hidden;
-            margin-left: 250px;
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+            min-height: calc(100vh - 100px);
         }
         .dashboard-header {
-            text-align: center;
             grid-column: span 2;
+            text-align: center;
             margin-bottom: 30px;
         }
         .dashboard-header h1 {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
-            color: #7e3ff2;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
+            color: #5a2ebc;
+            letter-spacing: 1px;
         }
         .dashboard-header p {
             font-size: 16px;
@@ -61,18 +61,16 @@
             font-weight: 500;
         }
         .alert {
-            padding: 15px;
-            border-radius: 12px;
+            padding: 15px 20px;
+            border-radius: 10px;
             display: none;
             align-items: center;
             width: 100%;
-            max-width: 600px;
-            grid-column: span 2;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            max-width: 500px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            position: fixed;
+            top: 50px;
+            left: calc(50vw - 200px);
             z-index: 1000;
         }
         .alert.show {
@@ -94,32 +92,31 @@
         .alert .close-btn {
             margin-left: auto;
             cursor: pointer;
-            font-size: 16px;
-            line-height: 20px;
+            font-size: 18px;
             color: white;
         }
         .alert .close-btn:hover {
             color: #ddd;
         }
         .section-card {
-            background: #f0ecfa;
-            padding: 25px;
+            background: #f8f9fa;
+            padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 6px 18px rgba(122, 82, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
         }
         .section-title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 600;
-            color: #7e3ff2;
+            color: #5a2ebc;
             margin-bottom: 20px;
             text-align: left;
         }
         .profile-section {
-            padding: 30px;
-            background: linear-gradient(135deg, #e2e0f5, #f0ecfa);
+            padding: 25px;
+            background: #ffffff;
             border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(122, 82, 255, 0.1);
-            position: relative;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
         }
         .profile-section.edit-mode {
             display: none;
@@ -130,104 +127,104 @@
         .profile-picture {
             display: flex;
             justify-content: flex-start;
-            margin-bottom: 25px;
-            position: relative;
-            width: fit-content;
+            margin-bottom: 20px;
         }
         .profile-picture img {
-            width: 250px;
-            height: 250px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid #a08be0;
-            box-shadow: 0 0 20px rgba(160, 139, 224, 0.3);
+            border: 4px solid #5a2ebc;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .profile-picture img:hover {
+            transform: scale(1.05);
         }
         .profile-picture .fallback {
-            width: 250px;
-            height: 250px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
-            background: #f0ecfa;
+            background: #e9ecef;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 5px solid #a08be0;
-            box-shadow: 0 0 20px rgba(160, 139, 224, 0.3);
+            border: 4px solid #5a2ebc;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
         .profile-picture .fallback i {
-            font-size: 80px;
-            color: #7e3ff2;
+            font-size: 60px;
+            color: #5a2ebc;
         }
         .edit-icon {
             position: absolute;
             bottom: 10px;
-            right: 14px;
-            width: 40px;
-            height: 40px;
-            background: #7e3ff2;
-            border: 3px solid #fff;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            background: #5a2ebc;
+            border: 2px solid #fff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: background 0.3s ease;
         }
-        .profile-form:not(.active) .edit-icon {
-            display: none;
+        .edit-icon:hover {
+            background: #4527a0;
         }
         .edit-icon i {
             color: white;
-            font-size: 18px;
-        }
-        .profile-info, .profile-form {
-            text-align: left;
-            max-width: 100%;
+            font-size: 16px;
         }
         .profile-info h3 {
-            font-size: 40px;
+            font-size: 32px;
             font-weight: 700;
-            background: linear-gradient(90deg, #7e3ff2, #a08be0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 25px;
+            color: #5a2ebc;
+            margin-bottom: 20px;
         }
         .profile-info p {
-            font-size: 20px;
-            color: #666;
-            margin-bottom: 15px;
-            line-height: 1.6;
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 12px;
+            line-height: 1.5;
         }
         .profile-info p span {
             font-weight: 600;
-            color: #7e3ff2;
-            margin-right: 12px;
+            color: #5a2ebc;
+            margin-right: 10px;
+        }
+        .edit-btn, .save-btn, .cancel-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
         .edit-btn {
-            padding: 12px 30px;
-            background: #7e3ff2;
+            background: #5a2ebc;
             color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
         }
-        .save-btn, .cancel-btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
+        .edit-btn:hover {
+            background: #4527a0;
         }
         .save-btn {
-            background: #7e3ff2;
+            background: #5a2ebc;
             color: white;
+        }
+        .save-btn:hover {
+            background: #4527a0;
         }
         .cancel-btn {
             background: #e0e0e0;
             color: #333;
-            margin-left: 20px;
+            margin-left: 15px;
+        }
+        .cancel-btn:hover {
+            background: #d0d0d0;
         }
         .profile-form {
             display: none;
@@ -237,87 +234,31 @@
         }
         .profile-form input {
             width: 100%;
-            max-width: 400px;
-            padding: 12px 18px;
-            margin: 10px 0;
-            border: 2px solid #ccc;
-            border-radius: 12px;
-            font-size: 16px;
+            max-width: 350px;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
         }
         .profile-form input:focus {
-            border-color: #7e3ff2;
+            border-color: #5a2ebc;
             outline: none;
         }
         .profile-form input[type="file"] {
-            padding: 12px 0;
+            padding: 10px 0;
         }
         .profile-form .btn-group {
             display: flex;
-            justify-content: flex-start;
-            gap: 20px;
+            gap: 15px;
             margin-top: 20px;
-        }
-        .item {
-            background: #f0ecfa;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(122, 82, 255, 0.1);
-        }
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-        .item-header p {
-            font-size: 17px;
-            font-weight: 500;
-            color: #333;
-        }
-        .item-header span {
-            font-size: 14px;
-            color: #7e3ff2;
-            font-weight: 500;
-        }
-        .item-details {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
-        }
-        .item-details.open {
-            max-height: 200px;
-        }
-        .item-details p {
-            font-size: 15px;
-            color: #666;
-            margin-top: 10px;
-            line-height: 1.6;
-        }
-        .item-details a {
-            color: #3366ff;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .action-btn {
-            padding: 8px 15px;
-            background: #7e3ff2;
-            color: white;
-            border: none;
-            border-radius: 18px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
         }
         .avatar-container {
             position: relative;
             margin-bottom: 20px;
-            width: 230px;
-            height: 230px;
-            transition: transform 0.3s ease;
-        }
-        .avatar-container:hover {
-            transform: scale(1.05);
+            width: 150px;
+            height: 150px;
         }
         .profile-avatar {
             width: 100%;
@@ -327,11 +268,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 60px;
-            color: #7e3ff2;
-            border: 4px solid #7e3ff2;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+            font-size: 50px;
+            color: #5a2ebc;
+            border: 3px solid #5a2ebc;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
         .profile-avatar img {
@@ -342,86 +282,139 @@
         }
         .upload-icon {
             position: absolute;
-            bottom: 8px;
-            right: 8px;
-            width: 40px;
-            height: 40px;
-            background: #7e3ff2;
+            bottom: 5px;
+            right: 5px;
+            width: 35px;
+            height: 35px;
+            background: #5a2ebc;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             color: white;
-            font-size: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            transition: background 0.3s ease;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
         .upload-icon:hover {
-            background: #5a2ebc;
+            background: #4527a0;
         }
         .file-input {
             display: none;
         }
-        @media (max-width: 1024px) {
-            .dashboard-container {
-                margin-left: 0;
-                width: 100vw;
-                padding: 30px 15px;
-            }
-            .dashboard-card {
-                grid-template-columns: 1fr;
-                padding: 25px;
-            }
-            .profile-picture img, .profile-picture .fallback {
-                width: 180px;
-                height: 180px;
-            }
-            .profile-picture .fallback i {
-                font-size: 70px;
-            }
-            .edit-icon {
-                width: 35px;
-                height: 35px;
-            }
-            .edit-icon i {
-                font-size: 16px;
-            }
-            .profile-form input {
-                max-width: 100%;
-            }
-            .avatar-container {
-                width: 150px;
-                height: 150px;
-            }
-            .profile-avatar {
-                font-size: 50px;
-            }
-            .upload-icon {
-                width: 35px;
-                height: 35px;
-                font-size: 18px;
-            }
+        .booking-card, .ticket-card, .match-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        @media (max-width: 640px) {
+        .booking-card:hover, .ticket-card:hover, .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        .booking-card h4, .ticket-card h4, .match-card h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .booking-card p, .ticket-card p, .match-card p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .booking-card .status, .ticket-card .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: white;
+        }
+        .status-confirmed {
+            background: #4caf50;
+        }
+        .status-pending {
+            background: #ff9800;
+        }
+        .status-cancelled {
+            background: #f44336;
+        }
+        .action-btn {
+            padding: 8px 15px;
+            background: #5a2ebc;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background 0.3s ease;
+        }
+        .action-btn:hover {
+            background: #4527a0;
+        }
+        .action-btn.cancel {
+            background: #f44336;
+        }
+        .action-btn.cancel:hover {
+            background: #d32f2f;
+        }
+        .no-data {
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+            padding: 20px;
+        }
+        /* Enhanced Responsive Adjustments */
+        @media (max-width: 1200px) {
+            .dashboard-card {
+                gap: 20px;
+                padding: 20px;
+                max-width: 1000px;
+            }
             .dashboard-header h1 {
-                font-size: 24px;
-            }
-            .section-title {
-                font-size: 20px;
-            }
-            .profile-info h3 {
                 font-size: 32px;
             }
+            .section-title {
+                font-size: 22px;
+            }
+            .profile-info h3 {
+                font-size: 28px;
+            }
             .profile-info p {
-                font-size: 18px;
+                font-size: 16px;
+            }
+            .booking-card h4, .ticket-card h4, .match-card h4 {
+                font-size: 16px;
+            }
+            .booking-card p, .ticket-card p, .match-card p {
+                font-size: 13px;
+            }
+        }
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                padding: 20px;
+            }
+            .dashboard-card {
+                grid-template-columns: 1fr; /* Stack profile and sections vertically */
+                grid-template-rows: auto auto; /* Ensure proper row distribution */
+                gap: 20px;
+                padding: 20px;
+            }
+            .dashboard-header {
+                grid-column: span 1; /* Adjust for single column */
+            }
+            .profile-section {
+                padding: 20px;
             }
             .profile-picture img, .profile-picture .fallback {
                 width: 150px;
                 height: 150px;
             }
             .profile-picture .fallback i {
-                font-size: 60px;
+                font-size: 50px;
             }
             .avatar-container {
                 width: 120px;
@@ -435,18 +428,215 @@
                 height: 30px;
                 font-size: 16px;
             }
+            .section-card {
+                padding: 15px;
+            }
+        }
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 15px;
+            }
+            .dashboard-card {
+                padding: 15px;
+                gap: 15px;
+            }
+            .dashboard-header h1 {
+                font-size: 28px;
+            }
+            .dashboard-header p {
+                font-size: 14px;
+            }
+            .section-title {
+                font-size: 20px;
+            }
+            .profile-info h3 {
+                font-size: 24px;
+            }
+            .profile-info p {
+                font-size: 14px;
+            }
+            .booking-card, .ticket-card, .match-card {
+                padding: 15px;
+            }
+            .booking-card h4, .ticket-card h4, .match-card h4 {
+                font-size: 15px;
+            }
+            .booking-card p, .ticket-card p, .match-card p {
+                font-size: 12px;
+            }
+            .action-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+        @media (max-width: 640px) {
+            .dashboard-header h1 {
+                font-size: 24px;
+            }
+            .dashboard-header p {
+                font-size: 13px;
+            }
+            .section-title {
+                font-size: 18px;
+            }
+            .profile-section {
+                padding: 15px;
+            }
+            .profile-info h3 {
+                font-size: 20px;
+            }
+            .profile-info p {
+                font-size: 13px;
+            }
+            .profile-picture img, .profile-picture .fallback {
+                width: 120px;
+                height: 120px;
+            }
+            .profile-picture .fallback i {
+                font-size: 40px;
+            }
+            .avatar-container {
+                width: 100px;
+                height: 100px;
+            }
+            .profile-avatar {
+                font-size: 30px;
+            }
+            .upload-icon {
+                width: 25px;
+                height: 25px;
+                font-size: 14px;
+            }
+            .profile-form input {
+                max-width: 100%;
+                padding: 10px;
+                font-size: 13px;
+            }
+            .edit-btn, .save-btn, .cancel-btn {
+                padding: 8px 20px;
+                font-size: 13px;
+            }
+            .booking-card, .ticket-card, .match-card {
+                padding: 12px;
+            }
+            .booking-card h4, .ticket-card h4, .match-card h4 {
+                font-size: 14px;
+            }
+            .booking-card p, .ticket-card p, .match-card p {
+                font-size: 11px;
+            }
+            .action-btn {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+            .alert {
+                left: 15px;
+                right: 15px;
+                width: auto;
+                max-width: none;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            .alert svg {
+                width: 18px;
+                height: 18px;
+            }
+            .alert .close-btn {
+                font-size: 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .dashboard-container {
+                padding: 10px;
+            }
+            .dashboard-card {
+                padding: 10px;
+                gap: 10px;
+            }
+            .dashboard-header h1 {
+                font-size: 20px;
+            }
+            .dashboard-header p {
+                font-size: 12px;
+            }
+            .section-title {
+                font-size: 16px;
+                margin-bottom: 15px;
+            }
+            .profile-section {
+                padding: 10px;
+            }
+            .profile-info h3 {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+            .profile-info p {
+                font-size: 12px;
+                margin-bottom: 8px;
+            }
+            .profile-picture img, .profile-picture .fallback {
+                width: 100px;
+                height: 100px;
+            }
+            .profile-picture .fallback i {
+                font-size: 30px;
+            }
+            .avatar-container {
+                width: 80px;
+                height: 80px;
+            }
+            .profile-avatar {
+                font-size: 25px;
+            }
+            .upload-icon {
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+            }
+            .profile-form input {
+                padding: 8px;
+                font-size: 12px;
+            }
+            .edit-btn, .save-btn, .cancel-btn {
+                padding: 6px 15px;
+                font-size: 12px;
+            }
+            .booking-card, .ticket-card, .match-card {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            .booking-card h4, .ticket-card h4, .match-card h4 {
+                font-size: 13px;
+            }
+            .booking-card p, .ticket-card p, .match-card p {
+                font-size: 10px;
+            }
+            .action-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+                margin-right: 5px;
+            }
+            .no-data {
+                font-size: 14px;
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
         <div class="dashboard-card">
+            <div class="dashboard-header">
+                <h1>User Dashboard</h1>
+                <p>Manage your profile and track your bookings and tickets</p>
+            </div>
+
             <div class="alert ${not empty message ? messageType : ''} ${not empty message ? 'show' : ''}">
                 <svg viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="${messageType == 'success' ? 'M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z' : 'M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.707a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.707z'}" clip-rule="evenodd"/>
                 </svg>
                 <p>${message}</p>
-                <span class="close-btn" onclick="this.parentElement.classList.remove('show')">&times;</span>
+                <span class="close-btn" onclick="this.parentElement.classList.remove('show')">×</span>
             </div>
 
             <div class="profile-section" id="profileSection">
@@ -504,21 +694,28 @@
                 <c:choose>
                     <c:when test="${not empty bookings}">
                         <c:forEach var="booking" items="${bookings}">
-                            <div class="item">
-                                <div class="item-header" onclick="toggleDetails(this)">
-                                    <p>${booking.matchName}</p>
-                                    <span>${booking.status}</span>
-                                </div>
-                                <div class="item-details">
-                                    <p><strong>Date:</strong> ${booking.date}</p>
-                                    <p><strong>Venue:</strong> ${booking.venue}</p>
-                                    <p><a href="${pageContext.request.contextPath}/booking/${booking.id}">View Details</a></p>
+                            <div class="booking-card">
+                                <h4>${booking.matchName}</h4>
+                                <p><strong>Date:</strong> ${booking.date}</p>
+                                <p><strong>Venue:</strong> ${booking.venue}</p>
+                                <p><strong>Tickets:</strong> ${booking.ticketQuantity}</p>
+                                <p><strong>Status:</strong> <span class="status status-${booking.status.toLowerCase()}">${booking.status}</span></p>
+                                <div>
+                                    <a href="${pageContext.request.contextPath}/booking/${booking.id}" class="action-btn">View Details</a>
+                                    <c:if test="${booking.status == 'Pending'}">
+                                        <a href="${pageContext.request.contextPath}/payment?bookingId=${booking.id}" class="action-btn">Confirm</a>
+                                        <button type="button" class="action-btn cancel" onclick="cancelBooking(${booking.id})">Cancel</button>
+                                        <form id="cancel-form-${booking.id}" action="${pageContext.request.contextPath}/mybookings" method="POST" style="display:none;">
+                                            <input type="hidden" name="action" value="cancel">
+                                            <input type="hidden" name="bookingId" value="${booking.id}">
+                                        </form>
+                                    </c:if>
                                 </div>
                             </div>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <p style="text-align: center; color: #666;">No bookings found.</p>
+                        <p class="no-data">No bookings found. <a href="${pageContext.request.contextPath}/book-tickets">Book now!</a></p>
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -528,21 +725,19 @@
                 <c:choose>
                     <c:when test="${not empty tickets}">
                         <c:forEach var="ticket" items="${tickets}">
-                            <div class="item">
-                                <div class="item-header" onclick="toggleDetails(this)">
-                                    <p>${ticket.matchName}</p>
-                                    <span>${ticket.status}</span>
-                                </div>
-                                <div class="item-details">
-                                    <p><strong>Date:</strong> ${ticket.date}</p>
-                                    <p><strong>Seat:</strong> ${ticket.seat}</p>
-                                    <p><a href="${pageContext.request.contextPath}/ticket/${ticket.id}">View Ticket</a></p>
+                            <div class="ticket-card">
+                                <h4>${ticket.matchName}</h4>
+                                <p><strong>Date:</strong> ${ticket.date}</p>
+                                <p><strong>Seat:</strong> ${ticket.seat}</p>
+                                <p><strong>Status:</strong> <span class="status status-${ticket.status.toLowerCase()}">${ticket.status}</span></p>
+                                <div>
+                                    <a href="${pageContext.request.contextPath}/ticket/${ticket.id}" class="action-btn">View Ticket</a>
                                 </div>
                             </div>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <p style="text-align: center; color: #666;">No tickets found.</p>
+                        <p class="no-data">No tickets found.</p>
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -552,20 +747,16 @@
                 <c:choose>
                     <c:when test="${not empty matchesAttended}">
                         <c:forEach var="match" items="${matchesAttended}">
-                            <div class="item">
-                                <div class="item-header" onclick="toggleDetails(this)">
-                                    <p>${match.teams}</p>
-                                    <span>${match.date}</span>
-                                </div>
-                                <div class="item-details">
-                                    <p><strong>Venue:</strong> ${match.venue}</p>
-                                    <p><strong>Result:</strong> ${match.result}</p>
-                                </div>
+                            <div class="match-card">
+                                <h4>${match.teams}</h4>
+                                <p><strong>Date:</strong> ${match.date}</p>
+                                <p><strong>Venue:</strong> ${match.venue}</p>
+                                <p><strong>Result:</strong> ${match.result}</p>
                             </div>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <p style="text-align: center; color: #666;">No matches attended.</p>
+                        <p class="no-data">No matches attended.</p>
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -576,36 +767,22 @@
     function toggleEdit() {
         const profileSection = document.getElementById('profileSection');
         const profileForm = document.getElementById('profileForm');
-
-        if (profileForm.classList.contains('active')) {
-            profileForm.classList.remove('active');
-            profileSection.classList.remove('edit-mode');
-            profileSection.classList.add('form-mode');
-        } else {
-            profileForm.classList.add('active');
-            profileSection.classList.remove('form-mode');
-            profileSection.classList.add('edit-mode');
-        }
-    }
-
-    function toggleDetails(header) {
-        const details = header.nextElementSibling;
-        details.classList.toggle('open');
+        profileForm.classList.toggle('active');
+        profileSection.classList.toggle('edit-mode');
     }
 
     function validateFileSize(input) {
         const file = input.files[0];
         const avatar = document.querySelector('.profile-avatar');
-        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        const maxSize = 10 * 1024 * 1024; // 10MB
 
         if (file) {
             if (file.size > maxSize) {
-                showError('File size exceeds 10MB limit. Please select a smaller file.');
+                showError('File size exceeds 10MB limit.');
                 input.value = '';
                 avatar.innerHTML = '<i class="fas fa-user"></i>';
                 return;
             }
-
             const reader = new FileReader();
             reader.onload = (event) => {
                 avatar.innerHTML = '';
@@ -630,33 +807,26 @@
         alertDiv.classList.add('error');
         alertMessage.textContent = message;
         alertDiv.classList.add('show');
-        console.log('Showing error: ' + message);
-        setTimeout(() => {
-            alertDiv.classList.remove('show');
-            console.log('Error hidden');
-        }, 5000);
+        setTimeout(() => alertDiv.classList.remove('show'), 5000);
+    }
+
+    function cancelBooking(bookingId) {
+        if (confirm('Are you sure you want to cancel this booking?')) {
+            const form = document.getElementById(`cancel-form-${bookingId}`);
+            if (form) form.submit();
+        }
     }
 
     const uploadIcon = document.querySelector('.upload-icon');
     const fileInput = document.querySelector('.file-input');
-
     if (uploadIcon && fileInput) {
-        uploadIcon.addEventListener('click', () => {
-            fileInput.click();
-        });
+        uploadIcon.addEventListener('click', () => fileInput.click());
     }
 
-    // Auto-hide alert after 5 seconds if it exists
     document.addEventListener('DOMContentLoaded', () => {
         const alert = document.querySelector('.alert');
-        if (alert.classList.contains('show')) {
-            console.log('Alert found with message: ' + alert.querySelector('p').textContent);
-            setTimeout(() => {
-                alert.classList.remove('show');
-                console.log('Alert hidden');
-            }, 5000);
-        } else {
-            console.log('No alert visible on page load');
+        if (alert && alert.classList.contains('show')) {
+            setTimeout(() => alert.classList.remove('show'), 5000);
         }
     });
 </script>

@@ -13,7 +13,7 @@ public class BookingModel {
     private int tickets;
     private String status;
 
-    public int getBookingId() {
+	public int getBookingId() {
         return bookingId;
     }
 

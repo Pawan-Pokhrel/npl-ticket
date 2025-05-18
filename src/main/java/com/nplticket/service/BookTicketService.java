@@ -52,7 +52,7 @@ public class BookTicketService {
             stmt.setInt(2, matchId);
             stmt.setInt(3, ticketQuantity);
             stmt.setLong(4, userId);
-            stmt.setInt(5, 0); // 0 for Pending status
+            stmt.setString(5, "Pending"); // 0 for Pending status
             int rowsAffected = stmt.executeUpdate();
             System.out.println("bookTicket: Inserted booking for user ID " + userId + ", match ID " + matchId + 
                               ", booking ID " + newBookingId + ", rows affected: " + rowsAffected);

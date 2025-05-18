@@ -97,13 +97,18 @@ public class BookingController extends HttpServlet {
                     bookingService.confirmBooking(bookingId);
                     request.setAttribute("message", "Booking confirmed successfully.");
                     request.setAttribute("messageType", "success");
+                } else if (action.equals("cancel")) {
+                    System.out.println("doPost: Cancelling booking ID " + bookingId);
+                    bookingService.cancelBooking(bookingId);
+                    request.setAttribute("message", "Booking cancelled successfully.");
+                    request.setAttribute("messageType", "success");
                 } else if (action.equals("delete")) {
                     System.out.println("doPost: Deleting booking ID " + bookingId);
                     bookingService.deleteBooking(bookingId);
                     request.setAttribute("message", "Booking deleted successfully.");
                     request.setAttribute("messageType", "success");
                 } else {
-                    request.setAttribute("message", "Invalid action.");
+                    request.setAttribute("message", "Invalid action: " + action);
                     request.setAttribute("messageType", "error");
                 }
             } catch (NumberFormatException e) {

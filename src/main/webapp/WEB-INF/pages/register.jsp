@@ -59,7 +59,7 @@
             line-height: 1.3;
             margin-bottom: 15px;
         }
-        .message {
+        .message, .error-message {
             color: #d32f2f;
             text-align: center;
             margin-bottom: 15px;
@@ -80,7 +80,7 @@
         }
         .form-group input, .form-group textarea {
             width: 100%;
-            padding: 12px 12px 12px 40px;
+            padding: 12px 40px 12px 40px;
             border: 1px solid #e0e0e0;
             border-radius: 12px;
             background-color: #f7f7ff;
@@ -94,7 +94,7 @@
             border-color: #7e3ff2;
             box-shadow: 0 0 10px #7e3ff2;
         }
-        .form-group i {
+        .form-group i:not(.toggle-password) {
             position: absolute;
             left: 12px;
             top: 12px;
@@ -105,12 +105,27 @@
             transition: opacity 0.3s ease;
             pointer-events: none;
         }
-        .form-group textarea ~ i {
+        .form-group textarea ~ i:not(.toggle-password) {
             top: 12px;
         }
-        .form-group:focus-within i, .form-group i {
+        .form-group:focus-within i:not(.toggle-password), .form-group i:not(.toggle-password) {
             opacity: 1;
             display: inline-block;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #7e3ff2;
+            opacity: 0.6;
+            cursor: pointer;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
+        .toggle-password:hover {
+            opacity: 1;
         }
         .avatar-container {
             position: relative;
@@ -135,7 +150,7 @@
             border: 4px solid #7e3ff2;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
-            overflow: hidden; /* Ensure the image stays within bounds */
+            overflow: hidden;
         }
         .avatar img {
             width: 100%;
@@ -226,12 +241,16 @@
             }
             .form-group input, .form-group textarea {
                 font-size: 14px;
-                padding: 10px 10px 10px 35px;
+                padding: 10px 35px 10px 35px;
             }
-            .form-group i {
+            .form-group i:not(.toggle-password) {
                 font-size: 18px;
                 left: 10px;
                 top: 10px;
+            }
+            .toggle-password {
+                font-size: 18px;
+                right: 10px;
             }
             button {
                 font-size: 16px;
@@ -246,8 +265,9 @@
     <% if (request.getAttribute("message") != null) { %>
         <div class="message"><%= request.getAttribute("message") %></div>
     <% } %>
+    <div class="error-message" id="error-message"></div>
 
-    <form action="register" method="post" enctype="multipart/form-data">
+    <form id="registerForm" action="register" method="post" enctype="multipart/form-data">
         <div class="avatar-container">
             <div class="avatar">
                 <i class="fas fa-user"></i>
@@ -274,11 +294,13 @@
         </div>
         <div class="form-group">
             <i class="fas fa-lock"></i>
-            <input type="password" name="password" placeholder="Create Password" required minlength="6">
+            <input type="password" name="password" id="password" placeholder="Create Password" required>
+            <i class="fas fa-eye toggle-password"></i>
         </div>
         <div class="form-group">
             <i class="fas fa-lock"></i>
-            <input type="password" name="confirmPassword" placeholder="Confirm Password" required minlength="6">
+            <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
+            <i class="fas fa-eye toggle-password"></i>
         </div>
 
         <input type="hidden" name="isVerified" value="false">
@@ -295,33 +317,106 @@
     const uploadIcon = document.querySelector('.upload-icon');
     const fileInput = document.querySelector('.file-input');
     const avatar = document.querySelector('.avatar');
+    const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+    const form = document.getElementById('registerForm');
+    const errorMessage = document.getElementById('error-message');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
 
-    uploadIcon.addEventListener('click', () => {
-        fileInput.click();
+    // Image upload functionality
+    if (uploadIcon && fileInput) {
+        uploadIcon.addEventListener('click', () => {
+            console.log('Upload icon clicked');
+            fileInput.click();
+        });
+    } else {
+        console.error('Upload icon or file input not found');
+    }
+
+    if (fileInput && avatar) {
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            console.log('File input changed, file:', file ? file.name : 'No file selected');
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    console.log('FileReader loaded, result length:', event.target.result.length);
+                    avatar.innerHTML = '';
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '50%';
+                    avatar.appendChild(img);
+                    console.log('Image preview updated');
+                };
+                reader.onerror = (error) => {
+                    console.error('FileReader error:', error);
+                    errorMessage.textContent = 'Failed to preview image';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                console.log('No valid image file selected, resetting avatar');
+                avatar.innerHTML = '<i class="fas fa-user"></i>';
+                if (file) {
+                    errorMessage.textContent = 'Please select a valid image file';
+                }
+            }
+        });
+    } else {
+        console.error('File input or avatar element not found');
+    }
+
+    // Password toggle functionality
+    togglePasswordIcons.forEach(icon => {
+        icon.addEventListener('click', () => {
+            const input = icon.previousElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
     });
 
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                // Clear existing content and set the image
-                avatar.innerHTML = '';
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                img.style.width = '100%';
-                img.style.height = '100%';
-                img.style.objectFit = 'cover';
-                img.style.borderRadius = '50%';
-                avatar.appendChild(img);
-                console.log('Image loaded:', event.target.result); // Debugging
-            };
-            reader.readAsDataURL(file);
-            console.log('File selected:', file.name); // Debugging
-        } else {
-            // Reset to default icon if no file is selected
-            avatar.innerHTML = '<i class="fas fa-user"></i>';
-            console.log('No file selected, resetting to default icon');
+    // Form validation
+    form.addEventListener('submit', (e) => {
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>?]).{8,}$/;
+
+        // Clear previous error message
+        errorMessage.textContent = '';
+
+        // Validate password requirements
+        if (!passwordRegex.test(password)) {
+            e.preventDefault();
+            errorMessage.textContent = 'Password must be at least 8 characters long, contain at least one capital letter, one number, and one special character.';
+            return;
+        }
+
+        // Validate password match
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            errorMessage.textContent = 'Passwords do not match.';
+            return;
+        }
+
+        // Validate other required fields
+        const fullName = form.querySelector('input[name="fullName"]').value;
+        const email = form.querySelector('input[name="email"]').value;
+        const phone = form.querySelector('input[name="phone"]').value;
+        const address = form.querySelector('textarea[name="address"]').value;
+
+        if (!fullName || !email || !phone || !address) {
+            e.preventDefault();
+            errorMessage.textContent = 'All fields are required.';
+            return;
         }
     });
 </script>

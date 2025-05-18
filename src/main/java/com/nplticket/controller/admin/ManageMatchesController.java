@@ -17,6 +17,7 @@ import java.util.List;
 public class ManageMatchesController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ManageMatchesService manageMatchService;
+    private static final int DEFAULT_ROWS_PER_PAGE = 15;
 
     @Override
     public void init() throws ServletException {
@@ -28,16 +29,56 @@ public class ManageMatchesController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("doGet: Fetching matches");
+
+        // Get pagination, rows per page, and search parameters
+        int page = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                page = Integer.parseInt(pageParam);
+                if (page < 1) page = 1;
+            } catch (NumberFormatException e) {
+                System.err.println("doGet: Invalid page number: " + pageParam);
+            }
+        }
+
+        int rowsPerPage = DEFAULT_ROWS_PER_PAGE;
+        String rowsPerPageParam = request.getParameter("rowsPerPage");
+        if (rowsPerPageParam != null && !rowsPerPageParam.isEmpty()) {
+            try {
+                rowsPerPage = Integer.parseInt(rowsPerPageParam);
+                if (rowsPerPage < 1) rowsPerPage = DEFAULT_ROWS_PER_PAGE;
+            } catch (NumberFormatException e) {
+                System.err.println("doGet: Invalid rows per page: " + rowsPerPageParam);
+            }
+        }
+
+        String searchTerm = request.getParameter("search");
+        if (searchTerm == null) {
+            searchTerm = "";
+        }
+
         try {
-            List<MatchModel> matches = manageMatchService.getAllMatches();
-            System.out.println("doGet: Fetched " + (matches != null ? matches.size() : 0) + " matches");
-            request.setAttribute("matches", matches);
+            // Fetch matches with search filtering
+            List<MatchModel> allMatches = manageMatchService.getAllMatches(searchTerm);
+            int totalMatches = allMatches.size();
+            int totalPages = (int) Math.ceil((double) totalMatches / rowsPerPage);
+            if (totalPages == 0) totalPages = 1;
+
+            // Apply server-side pagination
+            int startIndex = (page - 1) * rowsPerPage;
+            int endIndex = Math.min(startIndex + rowsPerPage, totalMatches);
+            List<MatchModel> paginatedMatches = allMatches.subList(startIndex, endIndex);
+
+            // Set attributes for the JSP
+            request.setAttribute("matches", paginatedMatches);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
             request.getRequestDispatcher("/WEB-INF/pages/admin/manage-matches.jsp").forward(request, response);
         } catch (Exception e) {
             System.err.println("doGet: Error: " + e.getMessage());
             request.getSession().setAttribute("message", "Error fetching match details: " + e.getMessage());
-            request.setAttribute("matches", new ArrayList<>());
-            request.getRequestDispatcher("/WEB-INF/pages/admin/manage-matches.jsp").forward(request, response);
+            handleError(request, response);
         }
     }
 
@@ -107,9 +148,32 @@ public class ManageMatchesController extends HttpServlet {
                     }
                 }
 
-                List<MatchModel> matches = manageMatchService.getAllMatches();
-                request.setAttribute("matches", matches);
-                request.getRequestDispatcher("/WEB-INF/pages/admin/manage-matches.jsp").forward(request, response);
+                // Preserve the current page, rows per page, and search term after update/delete
+                String pageParam = request.getParameter("page");
+                int page = 1;
+                if (pageParam != null && !pageParam.isEmpty()) {
+                    try {
+                        page = Integer.parseInt(pageParam);
+                        if (page < 1) page = 1;
+                    } catch (NumberFormatException e) {
+                        System.err.println("doPost: Invalid page number: " + pageParam);
+                    }
+                }
+
+                String rowsPerPageParam = request.getParameter("rowsPerPage");
+                int rowsPerPage = DEFAULT_ROWS_PER_PAGE;
+                if (rowsPerPageParam != null && !rowsPerPageParam.isEmpty()) {
+                    try {
+                        rowsPerPage = Integer.parseInt(rowsPerPageParam);
+                        if (rowsPerPage < 1) rowsPerPage = DEFAULT_ROWS_PER_PAGE;
+                    } catch (NumberFormatException e) {
+                        System.err.println("doPost: Invalid rows per page: " + rowsPerPageParam);
+                    }
+                }
+
+                response.sendRedirect(request.getContextPath() + "/admin/manage-matches?page=" + page + 
+                    "&rowsPerPage=" + rowsPerPage + "&search=" + (request.getParameter("search") != null ? request.getParameter("search") : ""));
+                return;
             } catch (NumberFormatException e) {
                 System.err.println("doPost: NumberFormatException: " + e.getMessage());
                 request.getSession().setAttribute("message", "Invalid numeric input: " + e.getMessage());
@@ -132,13 +196,10 @@ public class ManageMatchesController extends HttpServlet {
 
     private void handleError(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            List<MatchModel> matches = manageMatchService.getAllMatches();
-            request.setAttribute("matches", matches);
-        } catch (Exception e) {
-            System.err.println("handleError: Error fetching matches: " + e.getMessage());
-            request.setAttribute("matches", new ArrayList<>());
-        }
+        System.err.println("handleError: Setting default values due to error");
+        request.setAttribute("matches", new ArrayList<>());
+        request.setAttribute("currentPage", 1);
+        request.setAttribute("totalPages", 1);
         request.getRequestDispatcher("/WEB-INF/pages/admin/manage-matches.jsp").forward(request, response);
     }
 }

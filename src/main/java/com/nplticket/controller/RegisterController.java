@@ -57,6 +57,13 @@ public class RegisterController extends HttpServlet {
                 return;
             }
 
+            // Password validation
+            if (!password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-={}|\\[\\]\\\\:;\"'<>,.?/]).{8,}$")) {
+                request.setAttribute("message", "Password must be at least 8 characters long, contain at least one capital letter, one number, and one special character.");
+                request.getRequestDispatcher("/WEB-INF/pages/register.jsp").forward(request, response);
+                return;
+            }
+
             if (!password.equals(confirmPassword)) {
                 request.setAttribute("message", "Passwords do not match.");
                 request.getRequestDispatcher("/WEB-INF/pages/register.jsp").forward(request, response);
@@ -113,7 +120,7 @@ public class RegisterController extends HttpServlet {
             System.out.println("Session created for username: " + email.split("@")[0] + ", image: " + imagePath);
 
             request.setAttribute("message", "Registration successful! Welcome to NPL Ticket.");
-            request.getRequestDispatcher("/WEB-INF/pages/home.jsp").forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/");
 
         } catch (SQLException e) {
             e.printStackTrace();

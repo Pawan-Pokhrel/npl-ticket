@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp" %>
-<%@ include file="user-navbar.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,24 +8,59 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background: #f4f6fa; }
-        .main-content { margin-left: 240px; padding: 30px 40px; min-height: calc(100vh - 60px - 60px); box-sizing: border-box; background: linear-gradient(to right, #eae6f9, #f5f7fa); }
+        .main-content { margin: 0; padding: 30px 40px; min-height: calc(100vh - 60px - 60px); box-sizing: border-box; background: linear-gradient(to right, #eae6f9, #f5f7fa); }
         .main-content h1 { color: #5a2ebc; font-size: 32px; margin-bottom: 24px; }
 
-        /* Two cards per row */
-        .matches-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-bottom: 40px; }
+        /* Three cards per row */
+        .matches-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 40px; }
 
-        .match-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; display: flex; flex-direction: column; }
+        .match-card { 
+            background: white; 
+            border-radius: 14px; 
+            overflow: hidden; 
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08); 
+            transition: transform 0.3s, box-shadow 0.3s; 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            height: 350px; /* Fixed height for consistency */
+        }
         .match-card:hover { transform: translateY(-8px); box-shadow: 0 16px 32px rgba(126,63,242,0.2); }
 
         /* Horizontal images row with divider */
-        .images-row { display: flex; }
-        .team-img { width: 50%; aspect-ratio: 5/4; object-fit: cover; }
+        .images-row { 
+            display: flex; 
+            height: 200px; /* Fixed height for image row */
+        }
+        .team-img { 
+            width: 50%; 
+            height: 100%; /* Fill the fixed height of images-row */
+            object-fit: cover; 
+        }
         .divider { width: 6px; background: white; }
 
-        .match-info { padding: 16px; text-align: center; }
+        .match-info { 
+            padding: 16px; 
+            text-align: center; 
+            flex-grow: 1; /* Ensure match-info takes remaining space */
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
         .match-info h3 { font-size: 20px; color: #333; margin: 12px 0; }
         .match-info p { color: #555; font-size: 14px; margin: 4px 0; }
-        .date-badge { display: inline-block; background: #7e3ff2; color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 13px; margin-top: 10px; }
+        .date-badge { 
+            display: inline-block; 
+            background: #7e3ff2; 
+            color: #fff; 
+            padding: 6px 12px; 
+            border-radius: 8px; 
+            font-size: 13px; 
+            margin-top: 10px; 
+        }
+
+        /* Highlight active page in header */
+        .nav-link.active { color: #7e3ff2; font-weight: 600; border-bottom: 2px solid #7e3ff2; }
     </style>
 </head>
 <body>

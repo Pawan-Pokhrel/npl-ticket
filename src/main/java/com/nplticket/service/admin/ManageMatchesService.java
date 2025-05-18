@@ -4,33 +4,45 @@ import com.nplticket.model.MatchModel;
 import com.nplticket.config.DbConfig;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ManageMatchesService {
 
-    // Fetch all matches
-    public List<MatchModel> getAllMatches() throws SQLException {
+    // Fetch all matches with search filtering
+    public List<MatchModel> getAllMatches(String searchTerm) throws SQLException {
         List<MatchModel> matches = new ArrayList<>();
-        String query = "SELECT * FROM matches ORDER BY date, time";
+        String query = "SELECT * FROM matches WHERE match_id LIKE ? OR team1 LIKE ? OR team2 LIKE ? OR " +
+                       "date LIKE ? OR time LIKE ? OR venue LIKE ? OR status LIKE ? ORDER BY date, time";
 
         try (Connection conn = DbConfig.getDbConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            String searchPattern = "%" + searchTerm + "%";
+            stmt.setString(1, searchPattern); // match_id
+            stmt.setString(2, searchPattern); // team1
+            stmt.setString(3, searchPattern); // team2
+            stmt.setString(4, searchPattern); // date
+            stmt.setString(5, searchPattern); // time
+            stmt.setString(6, searchPattern); // venue
+            stmt.setString(7, searchPattern); // status
 
-            while (rs.next()) {
-                MatchModel match = new MatchModel();
-                match.setMatchId(rs.getInt("match_id"));
-                match.setTeam1(rs.getString("team1"));
-                match.setTeam2(rs.getString("team2"));
-                match.setDate(rs.getDate("date").toLocalDate());
-                match.setTime(rs.getTime("time").toLocalTime());
-                match.setVenue(rs.getString("venue"));
-                match.setAudience(rs.getInt("audience"));
-                match.setStatus(rs.getString("status"));
-                matches.add(match);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    MatchModel match = new MatchModel();
+                    match.setMatchId(rs.getInt("match_id"));
+                    match.setTeam1(rs.getString("team1"));
+                    match.setTeam2(rs.getString("team2"));
+                    match.setDate(rs.getDate("date").toLocalDate());
+                    match.setTime(rs.getTime("time").toLocalTime());
+                    match.setVenue(rs.getString("venue"));
+                    match.setAudience(rs.getInt("audience"));
+                    match.setStatus(rs.getString("status"));
+                    matches.add(match);
+                }
+                System.out.println("getAllMatches: Fetched " + matches.size() + " matches with search term: " + searchTerm);
             }
-            System.out.println("getAllMatches: Fetched " + matches.size() + " matches");
         } catch (SQLException e) {
             System.err.println("getAllMatches: SQL error: " + e.getMessage());
             throw e;
@@ -57,7 +69,6 @@ public class ManageMatchesService {
 
     // Register a new match
     public void saveMatch(MatchModel match) throws SQLException {
-        // Get the next available matchId
         int newMatchId = getNextMatchId();
         match.setMatchId(newMatchId);
 

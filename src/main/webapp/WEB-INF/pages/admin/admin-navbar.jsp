@@ -1,8 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="user-sidebar">
     <div class="user-profile">
-        <i class="fas fa-user-circle profile-icon"></i>
-        <p class="username">${sessionScope.username}</p>
+        <c:choose>
+            <c:when test="${not empty sessionScope.image}">
+                <img src="${pageContext.request.contextPath}/${sessionScope.image}" alt="User Image" class="profile-image">
+            </c:when>
+            <c:otherwise>
+                <img src="${pageContext.request.contextPath}/images/default-user.png" alt="User Image" class="profile-image">
+            </c:otherwise>
+        </c:choose>
+        <p class="username">${sessionScope.username != null ? sessionScope.username : 'Guest'}</p>
         <h2>
             <img src="${pageContext.request.contextPath}/images/NPL-text.png" alt="NPL Logo">
             <span>Admin</span>
@@ -14,7 +21,9 @@
         <a href="${pageContext.request.contextPath}/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a>
         <a href="${pageContext.request.contextPath}/admin/manage-tickets"><i class="fas fa-ticket-alt"></i> Manage Tickets</a>
         <a href="${pageContext.request.contextPath}/admin/ticket-types"><i class="fas fa-calendar-alt"></i> Ticket Types</a>
-        <a href="${pageContext.request.contextPath}/admin/manage-matches"><i class="fas fa-info-circle"></i> Manage Matches </a>
+        <a href="${pageContext.request.contextPath}/admin/manage-matches"><i class="fas fa-info-circle"></i> Manage Matches</a>
+        <a href="${pageContext.request.contextPath}/admin/manage-users"><i class="fas fa-users"></i> Manage Users</a>
+        <a href="${pageContext.request.contextPath}/admin/view-payments"><i class="fas fa-money-bill-wave"></i> View Payments</a>
     </div>
 
     <div class="nav-section">
@@ -66,10 +75,18 @@
         width: 60px;
     }
 
-    .profile-icon {
-        font-size: 60px;
-        color: #fff;
+    .profile-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #fff;
         margin-bottom: 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .profile-image:hover {
+        transform: scale(1.05);
     }
 
     .username {
@@ -104,8 +121,8 @@
     }
 
     .nav-section a:hover {
-        background-color: #9b7ce6; /* Lavender Accent */
-        transform: scale(1.05); 
+        background-color: #9b7ce6;
+        transform: scale(1.05);
     }
 
     .logout-btn {

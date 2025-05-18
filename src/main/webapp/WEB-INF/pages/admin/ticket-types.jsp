@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file="header.jsp" %>
 <%@ include file="admin-navbar.jsp" %>
 <!DOCTYPE html>
@@ -13,7 +15,7 @@
         }
 
         .main-content {
-            margin-left: 240px; /* Adjust if your sidebar width is different */
+            margin-left: 240px;
             padding: 30px 40px;
             flex-grow: 1;
         }
@@ -53,6 +55,7 @@
             box-shadow: 0 4px 14px rgba(0,0,0,0.1);
             overflow: hidden;
             transition: transform 0.3s ease;
+            position: relative;
         }
 
         .ticket-card:hover {
@@ -61,7 +64,6 @@
 
         .ticket-card img {
             width: 100%;
-            height: 180px;
             object-fit: cover;
         }
 
@@ -87,7 +89,38 @@
             margin-top: 10px;
         }
 
-        /* Popup form */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .edit-btn {
+            background-color: #3d8bfd;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background-color: #276dd9;
+        }
+
+        .delete-btn {
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #d93636;
+        }
+
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -109,7 +142,6 @@
             position: relative;
         }
 
-        /* Close button inside the popup */
         .popup-form-header {
             position: absolute;
             top: 10px;
@@ -120,11 +152,11 @@
         }
 
         .close-btn {
-            background-color: #5a2ebc; /* Added background color */
+            background-color: #5a2ebc;
             border: none;
             font-size: 28px;
             cursor: pointer;
-            color: #fff; /* Text color to white for contrast */
+            color: #fff;
             width: 40px;
             height: 40px;
             display: flex;
@@ -134,12 +166,10 @@
             border-radius: 50%;
         }
 
-        /* Hover effect for close button */
         .close-btn:hover {
-            background-color: #4725a1; /* Darken the background on hover */
+            background-color: #4725a1;
         }
 
-        /* Popup form styling */
         .popup-form h3 {
             font-size: 22px;
             margin-bottom: 24px;
@@ -162,7 +192,7 @@
         .popup-form input:focus,
         .popup-form textarea:focus {
             border: 1px solid #7e3ff2;
-        	box-shadow: 0 0px 5px #7e3ff2;
+            box-shadow: 0 0px 5px #7e3ff2;
             outline: none;
         }
 
@@ -181,7 +211,6 @@
             background: #4725a1;
         }
 
-        /* Cancel button inside the popup */
         .cancel-btn {
             background-color: #e74c3c;
             color: white;
@@ -197,62 +226,121 @@
         .cancel-btn:hover {
             background-color: #c0392b;
         }
+
+        .message, .error {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .message {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
-
 <div class="main-content">
     <h2 class="page-title">Manage Ticket Types</h2>
 
-    <button class="add-ticket-btn" onclick="document.querySelector('.popup-overlay').style.display='flex'">
-        + Add Ticket Type
-    </button>
+    <button class="add-ticket-btn" onclick="openAddForm()">+ Add Ticket Type</button>
+
+    <c:if test="${not empty message}">
+        <div class="message">${message}</div>
+    </c:if>
+    <c:if test="${not empty error}">
+        <div class="error">${error}</div>
+    </c:if>
 
     <div class="ticket-container">
-        <!-- Example Ticket Type Cards -->
-        <div class="ticket-card">
-            <img src="https://via.placeholder.com/400x180.png?text=VIP+Ticket" alt="VIP Ticket">
-            <div class="ticket-info">
-                <h3>VIP Ticket</h3>
-                <p>Access to premium seating and lounge area with refreshments included.</p>
-                <p class="price">Rs. 5000</p>
+        <c:forEach var="ticket" items="${ticketTypes}">
+            <div class="ticket-card">
+                <img src="${pageContext.request.contextPath}/images/${ticket.ticketType == 'Normal' ? 'normalTickets.jpg' : 'vipTicket.jpg'}" alt="${ticket.ticketType}">
+                <div class="ticket-info">
+                    <h3>${ticket.ticketType}</h3>
+                    <p>${ticket.ticketDesc}</p>
+                    <p class="price">Rs. ${ticket.unitPrice}</p>
+                    <div class="action-buttons">
+                        <button class="edit-btn" onclick="openEditForm(${ticket.ticketTypeId}, '${ticket.ticketType}', ${ticket.unitPrice}, '${ticket.ticketDesc}')">Edit</button>
+                        <form action="ticket-types" method="post" style="display:inline;">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="ticketTypeId" value="${ticket.ticketTypeId}">
+                            <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete ${ticket.ticketType}?')">Delete</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="ticket-card">
-            <img src="https://via.placeholder.com/400x180.png?text=Normal+Ticket" alt="Normal Ticket">
-            <div class="ticket-info">
-                <h3>Normal Ticket</h3>
-                <p>General seating with good view of the field. Basic amenities.</p>
-                <p class="price">Rs. 1000</p>
-            </div>
-        </div>
+        </c:forEach>
     </div>
 </div>
 
-<!-- Popup Form -->
-<div class="popup-overlay">
+<!-- Add Popup Form -->
+<div class="popup-overlay" id="addPopup">
     <div class="popup-form">
         <div class="popup-form-header">
-            <button class="close-btn" onclick="document.querySelector('.popup-overlay').style.display='none'">&times;</button>
+            <button class="close-btn" onclick="closeForm('addPopup')">×</button>
         </div>
         <h3>Add New Ticket Type</h3>
-        <form action="add-ticket-type" method="post">
+        <form action="ticket-types" method="post">
+            <input type="hidden" name="action" value="add">
             <div style="display: flex; gap: 15px;">
                 <input type="text" name="ticketName" placeholder="Ticket Name" required style="flex: 1;">
                 <input type="number" name="price" placeholder="Price (Rs.)" required style="flex: 1;">
             </div>
-
             <textarea name="description" rows="4" placeholder="Description" required></textarea>
-            <input type="text" name="imageUrl" placeholder="Image URL (optional)">
-
             <div style="text-align: right; margin-top: 10px;">
                 <button type="submit">Add Ticket</button>
-                <button type="button" class="cancel-btn" onclick="document.querySelector('.popup-overlay').style.display='none'">Cancel</button>
+                <button type="button" class="cancel-btn" onclick="closeForm('addPopup')">Cancel</button>
             </div>
         </form>
     </div>
 </div>
 
+<!-- Edit Popup Form -->
+<div class="popup-overlay" id="editPopup">
+    <div class="popup-form">
+        <div class="popup-form-header">
+            <button class="close-btn" onclick="closeForm('editPopup')">×</button>
+        </div>
+        <h3>Edit Ticket Type</h3>
+        <form action="ticket-types" method="post">
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="ticketTypeId" id="editTicketTypeId">
+            <div style="display: flex; gap: 15px;">
+                <input type="text" name="ticketName" id="editTicketName" placeholder="Ticket Name" required style="flex: 1;">
+                <input type="number" name="price" id="editPrice" placeholder="Price (Rs.)" required style="flex: 1;">
+            </div>
+            <textarea name="description" id="editDescription" rows="4" placeholder="Description" required></textarea>
+            <div style="text-align: right; margin-top: 10px;">
+                <button type="submit">Update Ticket</button>
+                <button type="button" class="cancel-btn" onclick="closeForm('editPopup')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openAddForm() {
+        document.getElementById('addPopup').style.display = 'flex';
+    }
+
+    function openEditForm(ticketTypeId, ticketName, price, description) {
+        document.getElementById('editTicketTypeId').value = ticketTypeId;
+        document.getElementById('editTicketName').value = ticketName;
+        document.getElementById('editPrice').value = price;
+        document.getElementById('editDescription').value = description;
+        document.getElementById('editPopup').style.display = 'flex';
+    }
+
+    function closeForm(popupId) {
+        document.getElementById(popupId).style.display = 'none';
+    }
+</script>
 </body>
 </html>
